@@ -59,6 +59,7 @@ class Graph{
     public:
         //Auxiliar methods
         void printGraphDot(ofstream& file);
+        void printGraph();
 
 };
 

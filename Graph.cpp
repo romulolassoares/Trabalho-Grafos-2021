@@ -220,6 +220,23 @@ Graph* agmPrim() {
 
 }
 
+void Graph::printGraph() {
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    printf("\e[H\e[2J");
+    cout << "Lista de adjacência" << endl;
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        cout << node->getId() << " => ";
+        while(edge != nullptr) {
+            cout << edge->getTargetId() << " - ";
+            edge = edge->getNextEdge();
+        }
+        cout << "null" << endl;
+        node = node->getNextNode();
+    }
+
+}
 
 void Graph::printGraphDot(ofstream& file) {
     if(file.is_open()) {
