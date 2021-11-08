@@ -172,8 +172,13 @@ bool Graph::searchNode(int id) {
 }
 
 Node *Graph::getNode(int id) {
+    Node *node = this->getFirstNode();
 
-    
+    while(node != nullptr) {
+        if(node->getId() == id)
+            return node;
+        node = node->getNextNode();
+    }    
 }
 
 
