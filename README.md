@@ -1,4 +1,4 @@
-# Nome do projeto
+# Trabalho de Grafos
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/romulolassoares/Trabalho-Grafos?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/romulolassoares/Trabalho-Grafos?style=for-the-badge)
@@ -62,4 +62,4 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
   </tr>
 </table>
 
-[⬆ Voltar ao topo](#nome-do-projeto)<br>
+[⬆ Voltar ao topo](#trabalho-de-grafos)<br>
