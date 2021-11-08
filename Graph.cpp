@@ -163,7 +163,12 @@ void Graph::removeNode(int id) {
 }
 
 bool Graph::searchNode(int id) {
-    
+    Node *node = this->getFirstNode();
+    while(node != nullptr) {
+        if(node->getId() == id)
+            return true;
+        node = node->getNextNode();
+    }
 }
 
 Node *Graph::getNode(int id) {
