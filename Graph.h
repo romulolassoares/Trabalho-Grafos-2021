@@ -56,8 +56,9 @@ class Graph{
         float greed();
         float greedRandom();
         float greedRactiveRandom();
-    private:
+    public:
         //Auxiliar methods
+        void printGraphDot(ofstream& file);
 
 };
 

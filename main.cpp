@@ -191,7 +191,10 @@ int main(int argc, char const *argv[]) {
     } else
         cout << "Unable to open " << argv[1];
 
-    mainMenu(output_file, graph);
+
+    
+    // mainMenu(output_file, graph);
+    // graph->printGraphDot(output_file);
 
     //Fechando arquivo de entrada
     input_file.close();
