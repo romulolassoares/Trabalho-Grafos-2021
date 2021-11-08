@@ -27,7 +27,7 @@ Para executar, siga estas etapas:
 ```console
 g++ *.c* -o execGrupoX
 
-./grafos-2021-1 <arquivo-de-entrads> <arquivo-de-saida> <op-direc> <op-peso-aresta> <op-peso-no>
+./grafos-2021-1 <arquivo-de-entrada> <arquivo-de-saida> <op-direc> <op-peso-aresta> <op-peso-no>
 ```
 
 * arquivo-de-entrada: arquivo que possuira as informações para a montagem do grafo.
