@@ -64,7 +64,7 @@ Graph* leituraInstancia(ifstream& input_file, int directed, int weightedEdge, in
     int numEdges;
 
     //Pegando a ordem do grafo
-    input_file >> order >> numEdges;
+    input_file >> order;
 
     //Criando objeto grafo
     Graph* graph = new Graph(order, directed, weightedEdge, weightedNode);
@@ -194,7 +194,7 @@ int main(int argc, char const *argv[]) {
 
     
     // mainMenu(output_file, graph);
-    // graph->printGraphDot(output_file);
+    graph->printGraphDot(output_file);
 
     //Fechando arquivo de entrada
     input_file.close();

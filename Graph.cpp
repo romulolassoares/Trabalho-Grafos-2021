@@ -82,7 +82,8 @@ Node *Graph::getLastNode() {
     This allows the correct updating of the numbers of edges in the graph being directed or not.
 */
 void Graph::insertNode(int id) {
-    Node *next, *aux = nullptr;
+    Node *next;
+    Node *aux = nullptr;
 
     // Verifica se já existe algum nó
     if(this->getFirstNode() == nullptr) {
@@ -105,7 +106,7 @@ void Graph::insertEdge(int id, int target_id, float weight) {
         this->insertNode(id);
     // Procura se o nó target_id existe. Se não existir insere ele no grafo
     if(!this->searchNode(target_id))
-        this->insertNode(id);
+        this->insertNode(target_id);
 
     Node *nodeId = this->getNode(id);
     Node *nodeTargetId = this->getNode(target_id);
@@ -119,14 +120,14 @@ void Graph::insertEdge(int id, int target_id, float weight) {
         nodeTargetId->incrementInDegree();
     } else {
         // Cria a aresta => id - target_id
-        nodeId->insertEdge(id, weight);
-        nodeTargetId->insertEdge(target_id, weight);
+        nodeId->insertEdge(target_id, weight);
+        nodeTargetId->insertEdge(id, weight);
 
-        // Aumenta os graus de saída e de entrada
-        nodeId->incrementOutDegree();
-        nodeTargetId->incrementOutDegree();
-        nodeId->incrementInDegree();
-        nodeTargetId->incrementInDegree();
+        // // Aumenta os graus de saída e de entrada
+        // nodeId->incrementOutDegree();
+        // nodeTargetId->incrementOutDegree();
+        // nodeId->incrementInDegree();
+        // nodeTargetId->incrementInDegree();
     }
 }
 
@@ -231,7 +232,7 @@ void Graph::printGraphDot(ofstream& file) {
         if(this->getDirected()) {
             file << "digraph { \n";
         } else {
-            file << "graph { \n";
+            file << "strict graph { \n";
         }
 
         // Verifica se o nó tem peso
