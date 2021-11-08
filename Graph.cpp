@@ -31,9 +31,7 @@ Graph::Graph(int order, bool directed, bool weighted_edge, bool weighted_node)
 }
 
 // Destructor
-Graph::~Graph()
-{
-
+Graph::~Graph() {
     Node *next_node = this->first_node;
 
     while (next_node != nullptr)
@@ -47,46 +45,34 @@ Graph::~Graph()
 }
 
 // Getters
-int Graph::getOrder()
-{
-
+int Graph::getOrder() {
     return this->order;
 }
-int Graph::getNumberEdges()
-{
 
+int Graph::getNumberEdges() {
     return this->number_edges;
 }
-//Function that verifies if the graph is directed
-bool Graph::getDirected()
-{
 
+//Function that verifies if the graph is directed
+bool Graph::getDirected() {
     return this->directed;
 }
-//Function that verifies if the graph is weighted at the edges
-bool Graph::getWeightedEdge()
-{
 
+//Function that verifies if the graph is weighted at the edges
+bool Graph::getWeightedEdge() {
     return this->weighted_edge;
 }
 
 //Function that verifies if the graph is weighted at the nodes
-bool Graph::getWeightedNode()
-{
-
+bool Graph::getWeightedNode() {
     return this->weighted_node;
 }
 
-
-Node *Graph::getFirstNode()
-{
-
+Node *Graph::getFirstNode(){
     return this->first_node;
 }
 
-Node *Graph::getLastNode()
-{
-
+Node *Graph::getLastNode() {
     return this->last_node;
 }
 
@@ -95,28 +81,24 @@ Node *Graph::getLastNode()
     The outdegree attribute of nodes is used as a counter for the number of edges in the graph.
     This allows the correct updating of the numbers of edges in the graph being directed or not.
 */
-void Graph::insertNode(int id)
-{
+void Graph::insertNode(int id) {
     
 }
 
-void Graph::insertEdge(int id, int target_id, float weight)
-{
+void Graph::insertEdge(int id, int target_id, float weight) {
 
     
 }
 
-void Graph::removeNode(int id){ 
+void Graph::removeNode(int id) { 
     
 }
 
-bool Graph::searchNode(int id)
-{
+bool Graph::searchNode(int id) {
     
 }
 
-Node *Graph::getNode(int id)
-{
+Node *Graph::getNode(int id) {
 
     
 }
@@ -124,19 +106,19 @@ Node *Graph::getNode(int id)
 
 //Function that prints a set of edges belongs breadth tree
 
-void Graph::breadthFirstSearch(ofstream &output_file){
+void Graph::breadthFirstSearch(ofstream &output_file) {
     
 }
 
 
 
-float Graph::floydMarshall(int idSource, int idTarget){
+float Graph::floydMarshall(int idSource, int idTarget) {
     
 }
 
    
 
-float Graph::dijkstra(int idSource, int idTarget){
+float Graph::dijkstra(int idSource, int idTarget) {
     
 }
 
@@ -145,16 +127,16 @@ void topologicalSorting(){
 
 }
 
-void breadthFirstSearch(ofstream& output_file){
+void breadthFirstSearch(ofstream& output_file) {
 
 }
-Graph* getVertexInduced(int* listIdNodes){
+Graph* getVertexInduced(int* listIdNodes) {
 
 }
 
-Graph* agmKuskal(){
+Graph* agmKuskal() {
 
 }
-Graph* agmPrim(){
+Graph* agmPrim() {
 
 }
