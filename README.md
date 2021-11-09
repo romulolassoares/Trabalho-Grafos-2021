@@ -4,6 +4,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/romulolassoares/Trabalho-Grafos?style=for-the-badge)
 ![C++](https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
 
+
 ## 💻 Sobre o projeto
 
 Tem o foco em representar grafos simples, orientados e não orientados, podenrados nos vértices e arestas e implemtar uma serie de funcionalidades detalhadas em sala de aula.  ([Funcionalidades](#funcionalidades)) 
@@ -27,7 +28,7 @@ Para executar, siga estas etapas:
 ```console
 g++ *.c* -o execGrupoX
 
-./grafos-2021-1 <arquivo-de-entrada> <arquivo-de-saida> <op-direc> <op-peso-aresta> <op-peso-no>
+./execGrupoX <arquivo-de-entrada> <arquivo-de-saida> <op-direc> <op-peso-aresta> <op-peso-no>
 ```
 
 * arquivo-de-entrada: arquivo que possuira as informações para a montagem do grafo.

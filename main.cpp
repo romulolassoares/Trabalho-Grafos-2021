@@ -194,7 +194,8 @@ int main(int argc, char const *argv[]) {
 
     
     // mainMenu(output_file, graph);
-    graph->printGraphDot(output_file);
+    graph->printGraph();
+    // graph->printGraphDot(output_file);
 
     //Fechando arquivo de entrada
     input_file.close();
