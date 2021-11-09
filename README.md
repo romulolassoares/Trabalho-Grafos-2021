@@ -53,7 +53,7 @@ Agradecemos às seguintes pessoas que contribuíram para este projeto:
 <table>
   <tr>
     <td align="center">
-      <a href="#">
+      <a href="https://github.com/romulolassoares">
         <img src="https://github.com/romulolassoares.png" width="100px;" alt="Foto do Rômulo Soares no GitHub"/><br>
         <sub>
           <b>Rômulo Soares</b>
