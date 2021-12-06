@@ -13,7 +13,7 @@ Todas as atividades de implementação cobradas ao longo do curso da disciplina 
 
 ### Funcionalidades
 
-- [ ] Subgrafo vértice-induzido pelo fecho transitivo direto.
+- [x] Subgrafo vértice-induzido pelo fecho transitivo direto.
 - [ ] Subgrafo vértice-induzido pelo fecho transitivo indireto.
 - [ ] Caminho mínimo entre dois vertices - Djkstra
 - [ ] Caminho mínimo entre dois vertices - Floyd

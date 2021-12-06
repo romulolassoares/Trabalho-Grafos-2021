@@ -46,7 +46,7 @@ class Graph{
         //methods phase1
         void topologicalSorting();
         void breadthFirstSearch(ofstream& output_file);
-        Graph* getVertexInduced(int* listIdNodes);
+        Graph* getVertexInduced(int idNode);
         Graph* agmKuskal();
         Graph* agmPrim();
         float floydMarshall(int idSource, int idTarget);
@@ -60,6 +60,7 @@ class Graph{
         //Auxiliar methods
         void printGraphDot(ofstream& file);
         void printGraph();
+        void recursiveGetVertexInduced(int id, Graph *graph);
 
 };
 

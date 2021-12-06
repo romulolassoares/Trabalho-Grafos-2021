@@ -209,8 +209,54 @@ void topologicalSorting(){
 void breadthFirstSearch(ofstream& output_file) {
 
 }
-Graph* getVertexInduced(int* listIdNodes) {
 
+/**
+ * Subgrafo Vértice-induzido pelo Fecho Transitivo Direto
+ *
+ * @param idNode id do vértice inicial.
+ * @return subgrafo gerado pelo fecho transitivo direto
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+Graph* Graph::getVertexInduced(int idNode) {
+    Node *node = this->getNode(idNode);
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    edge = node->getFirstEdge();
+
+    while(edge != nullptr) {
+        graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+        cout << node->getId() << " -> ";
+        cout << edge->getTargetId() << endl;
+        this->recursiveGetVertexInduced(edge->getTargetId(), graphAux);
+        edge = edge->getNextEdge();
+    }
+
+    node = node->getNextNode();
+
+    return graphAux;
+}
+
+/**
+ * Função auxiliar para achar o Subgrafo Vértice-induzido pelo Fecho Transitivo Direto
+ *
+ * @param idNode id do vértice inicial.
+ * @param graph subgrafo
+ */
+void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
+    Node *node = this->getNode(id);
+    Edge *edge;
+
+    edge = node->getFirstEdge();
+
+    while(edge != nullptr) {
+        graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+        cout << node->getId() << " -> ";
+        cout << edge->getTargetId() << endl;
+        this->recursiveGetVertexInduced(edge->getTargetId(), graph);
+        edge = edge->getNextEdge();
+    }
 }
 
 Graph* agmKuskal() {
