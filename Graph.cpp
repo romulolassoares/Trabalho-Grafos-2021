@@ -229,8 +229,6 @@ Graph* Graph::getVertexInduced(int idNode) {
 
     while(edge != nullptr) {
         graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
-        cout << node->getId() << " -> ";
-        cout << edge->getTargetId() << endl;
         this->recursiveGetVertexInduced(edge->getTargetId(), graphAux);
         edge = edge->getNextEdge();
     }
@@ -254,8 +252,6 @@ void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
 
     while(edge != nullptr) {
         graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
-        cout << node->getId() << " -> ";
-        cout << edge->getTargetId() << endl;
         this->recursiveGetVertexInduced(edge->getTargetId(), graph);
         edge = edge->getNextEdge();
     }
