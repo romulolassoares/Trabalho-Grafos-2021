@@ -195,9 +195,9 @@ int main(int argc, char const *argv[]) {
     
     // mainMenu(output_file, graph);
     // graph->printGraph();
-    graph->printGraphDot(output_file);
-    Graph *graph2 = graph->getVertexInduced(1);
-    graph2->printGraph();
+    // graph->printGraphDot(output_file);
+    Graph *graph2 = graph->indirectTransitive(5);
+    // graph2->printGraph();
 
     //Fechando arquivo de entrada
     input_file.close();

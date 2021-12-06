@@ -259,6 +259,39 @@ void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
     }
 }
 
+/**
+ * Subgrafo Vértice-induzido pelo Fecho Transitivo Indireto
+ *
+ * @param idNode id do vértice inicial.
+ * @return subgrafo gerado pelo fecho transitivo indireto
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+Graph* Graph::indirectTransitive(int idNode) {
+    
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+    Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    graphAux = getVertexInduced(idNode);
+    cout << "---------" << endl;    
+    while(node != nullptr) {
+        if(!graphAux->searchNode(node->getId())) {
+            graph->insertNode(node->getId());
+            edge = node->getFirstEdge();
+            while (edge != nullptr) {
+                if(!graphAux->searchNode(edge->getTargetId())) {
+                    graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+        node = node->getNextNode();
+    }
+    return graph;
+}
+
 Graph* agmKuskal() {
 
 }
