@@ -89,14 +89,16 @@ void Graph::insertNode(int id) {
     if(this->getFirstNode() == nullptr) {
         this->first_node = new Node(id);
     } else {
-        next = this->first_node;
-        // Procura o último nó inserido
-        while (next != nullptr) {
-            aux = next;
-            next = next->getNextNode();
-        }
-        // Inseri o nó na última posição
-        aux->setNextNode(new Node(id));        
+        if(!this->searchNode(id)) {
+            next = this->first_node;
+            // Procura o último nó inserido
+            while (next != nullptr) {
+                aux = next;
+                next = next->getNextNode();
+            }
+            // Inseri o nó na última posição
+            aux->setNextNode(new Node(id)); 
+        }      
     }
 }
 
