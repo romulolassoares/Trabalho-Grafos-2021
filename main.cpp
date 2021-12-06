@@ -196,7 +196,7 @@ int main(int argc, char const *argv[]) {
     // mainMenu(output_file, graph);
     // graph->printGraph();
     // graph->printGraphDot(output_file);
-    Graph *graph2 = graph->indirectTransitive(5);
+    Graph *graph2 = graph->getIndirectTransitive(5);
     // graph2->printGraph();
 
     //Fechando arquivo de entrada

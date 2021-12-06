@@ -267,15 +267,14 @@ void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
  * 
  * @author Rômulo Luiz Araujo Souza Soares
  */
-Graph* Graph::indirectTransitive(int idNode) {
+Graph* Graph::getIndirectTransitive(int idNode) {
     
     Node *node = this->getFirstNode();
     Edge *edge;
     Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
     Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
 
-    graphAux = getVertexInduced(idNode);
-    cout << "---------" << endl;    
+    graphAux = getVertexInduced(idNode);   
     while(node != nullptr) {
         if(!graphAux->searchNode(node->getId())) {
             graph->insertNode(node->getId());
