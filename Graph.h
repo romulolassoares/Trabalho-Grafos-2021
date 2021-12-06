@@ -45,7 +45,7 @@ class Graph{
 
         //methods phase1
         void topologicalSorting();
-        void breadthFirstSearch(ofstream& output_file);
+        void breadthFirstSearch(ofstream& output_file, int id);
         Graph* getVertexInduced(int idNode);
         Graph* getIndirectTransitive(int idNode);
         Graph* agmKuskal();

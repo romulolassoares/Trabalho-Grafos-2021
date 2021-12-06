@@ -185,14 +185,6 @@ Node *Graph::getNode(int id) {
 }
 
 
-//Function that prints a set of edges belongs breadth tree
-
-void Graph::breadthFirstSearch(ofstream &output_file) {
-    
-}
-
-
-
 float Graph::floydMarshall(int idSource, int idTarget) {
     
 }
@@ -208,8 +200,8 @@ void topologicalSorting(){
 
 }
 
-void breadthFirstSearch(ofstream& output_file) {
-
+void Graph::breadthFirstSearch(ofstream& output_file, int id) {
+    
 }
 
 /**
@@ -365,3 +357,5 @@ void Graph::printGraphDot(ofstream& file) {
         cout << "Falha ao abrir o arquivo";
     }
 }
+
+
