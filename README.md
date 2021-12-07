@@ -19,7 +19,7 @@ Todas as atividades de implementação cobradas ao longo do curso da disciplina 
 - [ ] Caminho mínimo entre dois vertices - Floyd
 - [ ] Árvore geradora mínima - Prim
 - [ ] Árvore Geradora Mínima - Kruskal
-- [ ] Caminhamento em largura
+- [x] Caminhamento em largura
 
 ## ☕ Executando o código
 

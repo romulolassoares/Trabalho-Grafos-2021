@@ -88,6 +88,7 @@ void Graph::insertNode(int id) {
     // Verifica se já existe algum nó
     if(this->getFirstNode() == nullptr) {
         this->first_node = new Node(id);
+        this->last_node = this->getFirstNode();
     } else {
         if(!this->searchNode(id)) {
             next = this->first_node;
@@ -97,7 +98,8 @@ void Graph::insertNode(int id) {
                 next = next->getNextNode();
             }
             // Inseri o nó na última posição
-            aux->setNextNode(new Node(id)); 
+            aux->setNextNode(new Node(id));
+            this->last_node = this->getNode(id);
         }      
     }
 }
@@ -200,8 +202,71 @@ void topologicalSorting(){
 
 }
 
-void Graph::breadthFirstSearch(ofstream& output_file, int id) {
-    
+/**
+ * Árvore dada pela ordem de caminhamento em largura
+ *
+ * @param idNode id do vértice inicial.
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+void Graph::breadthFirstSearch(int id) {
+    int cnt = 0;
+    Node *node = this->getFirstNode();
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    int *map = new int[this->getOrder()]; // Vetor para mapear os ids de cada nó no vetor
+    int *topologicalNumber = new int[this->getOrder()];
+    int *tree = new int[this->getOrder()];
+    queue<int> queue;
+    int i = 0;
+
+    while(node != nullptr) {
+        map[i] = node->getId();
+        node = node->getNextNode();
+        i++;
+    }
+    node = this->getFirstNode();
+
+    while(node != nullptr) {
+        int idNode = mappingVector(map, node->getId(), this->getOrder());
+        topologicalNumber[idNode] = tree[idNode] = -1;
+        node = node->getNextNode();
+    }
+
+    node = this->getNode(id);
+    tree[mappingVector(map, node->getId(), this->getOrder())] = node->getId();
+
+    queue.push(this->getNode(id)->getId());
+
+    while(!queue.empty()) {
+        Node *nodeAux = this->getNode(queue.front());
+        queue.pop();
+        while(nodeAux != nullptr) {
+            Edge *edge = nodeAux->getFirstEdge();
+            while(edge != nullptr) {
+                int idEdge = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(topologicalNumber[idEdge] == -1) {
+                    tree[idEdge] = nodeAux->getId();
+                    topologicalNumber[idEdge] = cnt++;
+                    queue.push(edge->getTargetId());
+                }
+                edge = edge->getNextEdge();
+            }
+            nodeAux = nodeAux->getNextNode();
+        }
+    }
+
+    for (int i = 0; i < this->getOrder(); i++) {
+        if(tree[i] != -1) {
+            if(map[i] != tree[i]) {
+                graphAux->insertEdge(tree[i], map[i], 0);
+            }
+        } else {
+            graphAux->insertNode(map[i]);
+        }
+    }
+    cout << "Árvore dada pela ordem de caminhamento em largura. Null são as arestas de retorno" << endl;
+    graphAux->printGraph();
 }
 
 /**
@@ -358,4 +423,9 @@ void Graph::printGraphDot(ofstream& file) {
     }
 }
 
-
+int Graph::mappingVector(int *map, int id, int size) {
+    for(int i = 0; i < size; i++) {
+        if(map[i] == id)
+            return i;
+    }
+}

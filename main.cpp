@@ -195,9 +195,10 @@ int main(int argc, char const *argv[]) {
     
     // mainMenu(output_file, graph);
     // graph->printGraph();
-    // graph->printGraphDot(output_file);
+    graph->printGraphDot(output_file);
     // Graph *graph2 = graph->getIndirectTransitive(5);
     // graph2->printGraph();
+    // graph->breadthFirstSearch(0);
 
     //Fechando arquivo de entrada
     input_file.close();
