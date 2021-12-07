@@ -105,30 +105,49 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file) {
     switch (selecao) {
         //Subgrafo induzido por um conjunto de vértices X;
         case 1:{
+            int id;
+            cout << "Qual será o vértice de origem?" << endl;
+            cin >> id;
+            Graph *graphAux = graph->getVertexInduced(id);
+            cout << "vértice-induzido pelo fecho transitivo direto: " << endl;
+            // graphAux->printGraph();
+            // graphAux = graph->getIndirectTransitive(id);
+            // cout << "----------------------------------------------" << endl;
+            // cout << "vértice-induzido pelo fecho transitivo indireto: " << endl;
+            // graphAux->printGraph();
             break;
         }
             //Caminho mínimo entre dois vértices usando Dijkstra;
         case 2:{
+            cout << "Funcionabilidade ainda não desenvolvida" << endl;
             break;
         }
             //Caminho mínimo entre dois vértices usando Floyd;
         case 3:{
+            cout << "Funcionabilidade ainda não desenvolvida" << endl;
             break;
         }
             //AGM - Kruscal;
         case 4:{
+            cout << "Funcionabilidade ainda não desenvolvida" << endl;
             break;
         }
             //AGM Prim;
         case 5:{
+            cout << "Funcionabilidade ainda não desenvolvida" << endl;
             break;
         }
             //Busca em largura;
         case 6:{
+            int id;
+            cout << "Qual será o vértice de origem?" << endl;
+            cin >> id;
+            graph->breadthFirstSearch(id);
             break;
         }
             //Ordenação Topologica;
         case 7:{
+            cout << "Funcionabilidade ainda não desenvolvida" << endl;
             break;
         }
         default:
@@ -144,7 +163,7 @@ int mainMenu(ofstream& output_file, Graph* graph) {
     int selecao = 1;
 
     while(selecao != 0) {
-        system("clear");
+        // system("clear");
         selecao = menu();
 
         if(output_file.is_open())
@@ -193,9 +212,9 @@ int main(int argc, char const *argv[]) {
 
 
     
-    // mainMenu(output_file, graph);
+    mainMenu(output_file, graph);
     // graph->printGraph();
-    graph->printGraphDot(output_file);
+    // graph->printGraphDot(output_file);
     // Graph *graph2 = graph->getIndirectTransitive(5);
     // graph2->printGraph();
     // graph->breadthFirstSearch(0);
