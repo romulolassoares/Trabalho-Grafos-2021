@@ -109,12 +109,13 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file) {
             cout << "Qual será o vértice de origem?" << endl;
             cin >> id;
             Graph *graphAux = graph->getVertexInduced(id);
-            cout << "vértice-induzido pelo fecho transitivo direto: " << endl;
-            // graphAux->printGraph();
-            // graphAux = graph->getIndirectTransitive(id);
-            // cout << "----------------------------------------------" << endl;
-            // cout << "vértice-induzido pelo fecho transitivo indireto: " << endl;
-            // graphAux->printGraph();
+            cout << "**************************************************" << endl;
+            cout << "Vértice-induzido pelo fecho transitivo direto: " << endl;
+            graphAux->printGraph();
+            graphAux = graph->getIndirectTransitive(id);
+            cout << "**************************************************" << endl;
+            cout << "Vértice-induzido pelo fecho transitivo indireto: " << endl;
+            graphAux->printGraph();
             break;
         }
             //Caminho mínimo entre dois vértices usando Dijkstra;

@@ -290,7 +290,7 @@ Graph* Graph::getVertexInduced(int idNode) {
         edge = edge->getNextEdge();
     }
 
-    node = node->getNextNode();
+    // node = node->getNextNode();
 
     return graphAux;
 }
@@ -305,13 +305,21 @@ void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
     Node *node = this->getNode(id);
     Edge *edge;
 
-    edge = node->getFirstEdge();
+    if(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            if(graph->searchNode(edge->getTargetId())) {
+                edge = edge->getNextEdge();
+            }
 
-    while(edge != nullptr) {
-        graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
-        this->recursiveGetVertexInduced(edge->getTargetId(), graph);
-        edge = edge->getNextEdge();
+            if(edge != nullptr) {
+                graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                this->recursiveGetVertexInduced(edge->getTargetId(), graph);
+                edge = edge->getNextEdge();
+            }
+        }
     }
+    
 }
 
 /**
@@ -356,7 +364,7 @@ Graph* agmPrim() {
 void Graph::printGraph() {
     Node *node = this->getFirstNode();
     Edge *edge;
-    printf("\e[H\e[2J");
+    // printf("\e[H\e[2J");
     cout << "Lista de adjacência" << endl;
     while(node != nullptr) {
         edge = node->getFirstEdge();
