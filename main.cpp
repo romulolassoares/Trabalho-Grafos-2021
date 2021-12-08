@@ -207,19 +207,19 @@ int main(int argc, char const *argv[]) {
     Graph* graph;
 
     if(input_file.is_open()) {
-        graph = leituraInstancia(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
+        graph = leitura(input_file, atoi(argv[3]), atoi(argv[4]), atoi(argv[5]));
     } else
         cout << "Unable to open " << argv[1];
 
 
     
-    mainMenu(output_file, graph);
+    // mainMenu(output_file, graph);
     // graph->printGraph();
-    // graph->printGraphDot(output_file);
+    graph->printGraphDot(output_file);
     // Graph *graph2 = graph->getIndirectTransitive(5);
     // graph2->printGraph();
     // graph->breadthFirstSearch(0);
-
+    cout << graph->dijkstra(1,4);
     //Fechando arquivo de entrada
     input_file.close();
 

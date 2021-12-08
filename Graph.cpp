@@ -11,8 +11,12 @@
 #include <ctime>
 #include <float.h>
 #include <iomanip>
+#include <limits>
+
 
 using namespace std;
+
+int INF = -1;
 
 /**************************************************************************************************
  * Defining the Graph's methods
@@ -136,7 +140,7 @@ void Graph::insertEdge(int id, int target_id, float weight) {
 }
 
 void Graph::removeNode(int id) { 
-    Node *node, *nodeAux, *nodePrev;
+    Node *node, *nodeAux, *previous;
     nodeAux = new Node(id);
     node = this->getFirstNode();
 
@@ -162,7 +166,7 @@ void Graph::removeNode(int id) {
             delete node;
             return;
         }
-        nodePrev = node;
+        previous = node;
         node = node->getNextNode();
     }
 }
@@ -192,10 +196,92 @@ float Graph::floydMarshall(int idSource, int idTarget) {
 }
 
    
-
 float Graph::dijkstra(int idSource, int idTarget) {
+	int *distance = new int[this->order];
+	int *map = new int[this->order];
+	int *visit = new int[this->order];
+	int *previous = new int[this->order];
+	
+	Node *node = this->getFirstNode();
     
+	for(int i=0; i < this->order; i++, node = node->getNextNode()) {
+		map[i] = node->getId();
+		if(node->getId() == idSource) {
+			distance[i] = 0;
+			visit[i] = 0;
+		} else {
+			distance[i] = -1;
+			visit[i] = 1;
+		}
+		previous[i] = -1;
+	}
+
+	this->recursiveDijkstra(distance, visit, previous, map, idSource);
+
+	int distTotal = 0;
+    int targetID = mappingVector(map, idTarget, this->getOrder());
+	if(distance[targetID] != -1) {
+		int path = previous[targetID];
+		distTotal += distance[targetID];
+		while (path != -1) {
+			distTotal += distance[mappingVector(map, path, this->getOrder())];
+			path = previous[mappingVector(map, path, this->getOrder())];
+		}
+	} else {
+		distTotal = -1;
+	}
+
+	delete[] visit;
+	delete[] previous;
+	delete[] distance;
+	delete[] map;
+
+	return distTotal;
+};
+
+void Graph::recursiveDijkstra(int* distance, int* visit, int* previous, int* map, int current) {
+	Node *node = this->getNode(current);
+	Edge *edge = node->getFirstEdge();
+
+	int currentIndex = mappingVector(map, current, this->getOrder());
+	int indexEdge;
+
+	while(edge != nullptr) {
+		indexEdge = mappingVector(map, edge->getTargetId(), this->getOrder());
+
+		if(distance[indexEdge] > -1) {
+            if(distance[indexEdge] > distance[indexEdge] + edge->getWeight()) {
+                distance[indexEdge] = distance[indexEdge] + edge->getWeight()+1;
+                previous[indexEdge] = current;
+            }
+		} else {
+            distance[indexEdge] = distance[indexEdge] + edge->getWeight()+1;
+            previous[indexEdge] = current;
+		}
+		edge = edge->getNextEdge();
+	}
+
+	int small = -1;
+
+	for(int i=0; i < this->order && small == -1; i++) {
+		if((visit[i] && distance[i] > -1)) {
+            small = distance[i];
+            current = map[i];
+		}
+	}
+
+	if(small > -1) {
+		for(int i = 0; i < this->order; i++) {
+			if((visit[i] == 1) && (distance[i] > -1) && (distance[i] < small) ) {
+                small = distance[i];
+                current = map[i];
+            }
+		}
+		visit[currentIndex] = 0;
+		this->recursiveDijkstra(distance, visit, previous, map, current);
+	}
 }
+
 
 //function that prints a topological sorting
 void topologicalSorting(){

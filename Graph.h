@@ -52,6 +52,7 @@ class Graph{
         Graph* agmPrim();
         float floydMarshall(int idSource, int idTarget);
         float dijkstra(int idSource, int idTarget);
+        void recursiveDijkstra(int* distance, int* visit, int* previous, int* map, int current);
 
         //methods phase1
         float greed();
