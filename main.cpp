@@ -120,7 +120,14 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file) {
         }
             //Caminho mínimo entre dois vértices usando Dijkstra;
         case 2:{
-            cout << "Funcionabilidade ainda não desenvolvida" << endl;
+            int idStart, idEnd;
+            cout << "Vértice de origem?" << endl;
+            cin >> idStart;
+            cout << "Vértice de destino?" << endl;
+            cin >> idEnd;
+            int distance = graph->dijkstra(idStart, idEnd);
+            cout << "**************************************************" << endl;
+            cout << "A distância entre " << idStart << " e " << idEnd << " é de " << distance << endl;
             break;
         }
             //Caminho mínimo entre dois vértices usando Floyd;
@@ -213,13 +220,13 @@ int main(int argc, char const *argv[]) {
 
 
     
-    // mainMenu(output_file, graph);
+    mainMenu(output_file, graph);
     // graph->printGraph();
-    graph->printGraphDot(output_file);
+    // graph->printGraphDot(output_file);
     // Graph *graph2 = graph->getIndirectTransitive(5);
     // graph2->printGraph();
     // graph->breadthFirstSearch(0);
-    cout << graph->dijkstra(1,4);
+    // cout << graph->dijkstra(1,4);
     //Fechando arquivo de entrada
     input_file.close();
 
