@@ -443,6 +443,14 @@ Graph* Graph::getIndirectTransitive(int idNode) {
 Graph* agmKuskal() {
 
 }
+
+/**
+ * Algoritmo de Prim
+ *
+ * @return subgrafo gerado pelo algoritmo de Prim
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
 Graph* Graph::agmPrim() {
     bool *visit = new bool[this->getOrder()];
     float *distance = new float[this->getOrder()];
