@@ -45,12 +45,14 @@ class Graph{
 
         //methods phase1
         void topologicalSorting();
-        void breadthFirstSearch(ofstream& output_file);
-        Graph* getVertexInduced(int* listIdNodes);
+        void breadthFirstSearch(int id);
+        Graph* getVertexInduced(int idNode);
+        Graph* getIndirectTransitive(int idNode);
         Graph* agmKuskal();
         Graph* agmPrim();
         float floydMarshall(int idSource, int idTarget);
         float dijkstra(int idSource, int idTarget);
+        void recursiveDijkstra(int* distance, int* visit, int* previous, int* map, int current);
 
         //methods phase1
         float greed();
@@ -60,6 +62,11 @@ class Graph{
         //Auxiliar methods
         void printGraphDot(ofstream& file);
         void printGraph();
+        void recursiveGetVertexInduced(int id, Graph *graph);
+        int mappingVector(int *map, int id, int size);
+        int minumumDistance(bool *visit, float *distance);
+        Graph* auxAgmPrim(int *list);
+        Graph* subGraph(int *list);
 
 };
 

@@ -11,8 +11,12 @@
 #include <ctime>
 #include <float.h>
 #include <iomanip>
+#include <limits>
+
 
 using namespace std;
+
+int INF = -1;
 
 /**************************************************************************************************
  * Defining the Graph's methods
@@ -88,15 +92,19 @@ void Graph::insertNode(int id) {
     // Verifica se já existe algum nó
     if(this->getFirstNode() == nullptr) {
         this->first_node = new Node(id);
+        this->last_node = this->getFirstNode();
     } else {
-        next = this->first_node;
-        // Procura o último nó inserido
-        while (next != nullptr) {
-            aux = next;
-            next = next->getNextNode();
-        }
-        // Inseri o nó na última posição
-        aux->setNextNode(new Node(id));        
+        if(!this->searchNode(id)) {
+            next = this->first_node;
+            // Procura o último nó inserido
+            while (next != nullptr) {
+                aux = next;
+                next = next->getNextNode();
+            }
+            // Inseri o nó na última posição
+            aux->setNextNode(new Node(id));
+            this->last_node = this->getNode(id);
+        }      
     }
 }
 
@@ -132,7 +140,7 @@ void Graph::insertEdge(int id, int target_id, float weight) {
 }
 
 void Graph::removeNode(int id) { 
-    Node *node, *nodeAux, *nodePrev;
+    Node *node, *nodeAux, *previous;
     nodeAux = new Node(id);
     node = this->getFirstNode();
 
@@ -158,7 +166,7 @@ void Graph::removeNode(int id) {
             delete node;
             return;
         }
-        nodePrev = node;
+        previous = node;
         node = node->getNextNode();
     }
 }
@@ -183,47 +191,366 @@ Node *Graph::getNode(int id) {
 }
 
 
-//Function that prints a set of edges belongs breadth tree
-
-void Graph::breadthFirstSearch(ofstream &output_file) {
-    
-}
-
-
-
 float Graph::floydMarshall(int idSource, int idTarget) {
     
 }
 
    
-
 float Graph::dijkstra(int idSource, int idTarget) {
+	int *distance = new int[this->order];
+	int *map = new int[this->order];
+	int *visit = new int[this->order];
+	int *previous = new int[this->order];
+	
+	Node *node = this->getFirstNode();
     
+	for(int i=0; i < this->order; i++, node = node->getNextNode()) {
+		map[i] = node->getId();
+		if(node->getId() == idSource) {
+			distance[i] = 0;
+			visit[i] = 0;
+		} else {
+			distance[i] = -1;
+			visit[i] = 1;
+		}
+		previous[i] = -1;
+	}
+
+	this->recursiveDijkstra(distance, visit, previous, map, idSource);
+
+	int distTotal = 0;
+    int targetID = mappingVector(map, idTarget, this->getOrder());
+	if(distance[targetID] != -1) {
+		int path = previous[targetID];
+		distTotal += distance[targetID];
+		while (path != -1) {
+			distTotal += distance[mappingVector(map, path, this->getOrder())];
+			path = previous[mappingVector(map, path, this->getOrder())];
+		}
+	} else {
+		distTotal = -1;
+	}
+
+	delete[] visit;
+	delete[] previous;
+	delete[] distance;
+	delete[] map;
+
+	return distTotal;
+};
+
+void Graph::recursiveDijkstra(int* distance, int* visit, int* previous, int* map, int current) {
+	Node *node = this->getNode(current);
+	Edge *edge = node->getFirstEdge();
+
+	int currentIndex = mappingVector(map, current, this->getOrder());
+	int indexEdge;
+
+	while(edge != nullptr) {
+		indexEdge = mappingVector(map, edge->getTargetId(), this->getOrder());
+
+		if(distance[indexEdge] > -1) {
+            if(distance[indexEdge] > distance[indexEdge] + edge->getWeight()) {
+                distance[indexEdge] = distance[indexEdge] + edge->getWeight()+1;
+                previous[indexEdge] = current;
+            }
+		} else {
+            distance[indexEdge] = distance[indexEdge] + edge->getWeight()+1;
+            previous[indexEdge] = current;
+		}
+		edge = edge->getNextEdge();
+	}
+
+	int small = -1;
+
+	for(int i=0; i < this->order && small == -1; i++) {
+		if((visit[i] && distance[i] > -1)) {
+            small = distance[i];
+            current = map[i];
+		}
+	}
+
+	if(small > -1) {
+		for(int i = 0; i < this->order; i++) {
+			if((visit[i] == 1) && (distance[i] > -1) && (distance[i] < small) ) {
+                small = distance[i];
+                current = map[i];
+            }
+		}
+		visit[currentIndex] = 0;
+		this->recursiveDijkstra(distance, visit, previous, map, current);
+	}
 }
+
 
 //function that prints a topological sorting
 void topologicalSorting(){
 
 }
 
-void breadthFirstSearch(ofstream& output_file) {
+/**
+ * Árvore dada pela ordem de caminhamento em largura
+ *
+ * @param idNode id do vértice inicial.
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+void Graph::breadthFirstSearch(int id) {
+    int cnt = 0;
+    Node *node = this->getFirstNode();
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
 
+    int *map = new int[this->getOrder()]; // Vetor para mapear os ids de cada nó no vetor
+    int *topologicalNumber = new int[this->getOrder()];
+    int *tree = new int[this->getOrder()];
+    queue<int> queue;
+    int i = 0;
+
+    while(node != nullptr) {
+        map[i] = node->getId();
+        node = node->getNextNode();
+        i++;
+    }
+    node = this->getFirstNode();
+
+    while(node != nullptr) {
+        int idNode = mappingVector(map, node->getId(), this->getOrder());
+        topologicalNumber[idNode] = tree[idNode] = -1;
+        node = node->getNextNode();
+    }
+
+    node = this->getNode(id);
+    tree[mappingVector(map, node->getId(), this->getOrder())] = node->getId();
+
+    queue.push(this->getNode(id)->getId());
+
+    while(!queue.empty()) {
+        Node *nodeAux = this->getNode(queue.front());
+        queue.pop();
+        while(nodeAux != nullptr) {
+            Edge *edge = nodeAux->getFirstEdge();
+            while(edge != nullptr) {
+                int idEdge = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(topologicalNumber[idEdge] == -1) {
+                    tree[idEdge] = nodeAux->getId();
+                    topologicalNumber[idEdge] = cnt++;
+                    queue.push(edge->getTargetId());
+                }
+                edge = edge->getNextEdge();
+            }
+            nodeAux = nodeAux->getNextNode();
+        }
+    }
+
+    for (int i = 0; i < this->getOrder(); i++) {
+        if(tree[i] != -1) {
+            if(map[i] != tree[i]) {
+                graphAux->insertEdge(tree[i], map[i], 0);
+            }
+        } else {
+            graphAux->insertNode(map[i]);
+        }
+    }
+    cout << "Árvore dada pela ordem de caminhamento em largura. Null são as arestas de retorno" << endl;
+    graphAux->printGraph();
 }
-Graph* getVertexInduced(int* listIdNodes) {
 
+/**
+ * Subgrafo Vértice-induzido pelo Fecho Transitivo Direto
+ *
+ * @param idNode id do vértice inicial.
+ * @return subgrafo gerado pelo fecho transitivo direto
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+Graph* Graph::getVertexInduced(int idNode) {
+    Node *node = this->getNode(idNode);
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    edge = node->getFirstEdge();
+
+    while(edge != nullptr) {
+        graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+        this->recursiveGetVertexInduced(edge->getTargetId(), graphAux);
+        edge = edge->getNextEdge();
+    }
+
+    // node = node->getNextNode();
+
+    return graphAux;
+}
+
+/**
+ * Função auxiliar para achar o Subgrafo Vértice-induzido pelo Fecho Transitivo Direto
+ *
+ * @param idNode id do vértice inicial.
+ * @param graph subgrafo
+ */
+void Graph::recursiveGetVertexInduced(int id, Graph *graph) {
+    Node *node = this->getNode(id);
+    Edge *edge;
+
+    if(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            if(graph->searchNode(edge->getTargetId())) {
+                edge = edge->getNextEdge();
+            }
+
+            if(edge != nullptr) {
+                graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                this->recursiveGetVertexInduced(edge->getTargetId(), graph);
+                edge = edge->getNextEdge();
+            }
+        }
+    }
+    
+}
+
+/**
+ * Subgrafo Vértice-induzido pelo Fecho Transitivo Indireto
+ *
+ * @param idNode id do vértice inicial.
+ * @return subgrafo gerado pelo fecho transitivo indireto
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+Graph* Graph::getIndirectTransitive(int idNode) {
+    
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+    Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    graphAux = getVertexInduced(idNode);   
+    while(node != nullptr) {
+        if(!graphAux->searchNode(node->getId())) {
+            graph->insertNode(node->getId());
+            edge = node->getFirstEdge();
+            while (edge != nullptr) {
+                if(!graphAux->searchNode(edge->getTargetId())) {
+                    graph->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+        node = node->getNextNode();
+    }
+    return graph;
 }
 
 Graph* agmKuskal() {
 
 }
-Graph* agmPrim() {
 
+/**
+ * Algoritmo de Prim
+ *
+ * @return subgrafo gerado pelo algoritmo de Prim
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+Graph* Graph::agmPrim() {
+    bool *visit = new bool[this->getOrder()];
+    float *distance = new float[this->getOrder()];
+    int *path = new int[this->getOrder()];
+    float infinit = std::numeric_limits<float>::max();
+    float lighterWeight = infinit;
+    int *map = new int[this->getOrder()];
+
+    Node *node = this->getFirstNode();
+    Edge *edge, *lighterEdge;
+    int i = 0;
+    while(node != nullptr) {
+        map[i] = node->getId();
+        i++;
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            if(edge->getWeight() <= lighterWeight) {
+                lighterWeight = edge->getWeight();
+                lighterEdge = edge;
+            }
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+
+    int start = lighterEdge->getTargetId();
+
+    for(i = 0; i < this->order; i++) {
+        visit[i] = false;
+        distance[i] = infinit;
+        path[i] = -1;
+    }
+    distance[start] = 0;
+
+    for(i = 0; i < this->getOrder(); i++) {
+        int distMin = minumumDistance(visit, distance);
+        visit[distMin] = true;
+        Node *nodeAux = this->getNode(distMin);
+        if(nodeAux != nullptr) {
+            edge = nodeAux->getFirstEdge();
+            while(edge != nullptr) {
+                int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(!visit[edgeID] && edge->getWeight() < distance[edgeID]) {
+                    distance[edgeID] = edge->getWeight();
+                    path[edgeID] = distMin;
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+    }
+
+    Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    node = this->getFirstNode();
+
+    for(i = 0; i < this->getOrder(); i++) {
+        visit[i] = false;
+    }
+
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+            if(!visit[edgeID] && path[edgeID] != -1) {;
+                graph->insertEdge(path[edgeID], map[edgeID], edge->getWeight());
+                visit[edgeID] = true;
+            } 
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+
+    return graph;
+}
+
+int Graph::minumumDistance(bool *visit, float *distance) {
+    float min = std::numeric_limits<float>::max();
+    int lighterId;
+
+    for (int i = 0; i < this->getOrder(); i++)
+    {
+        if(visit[i] == false && distance[i] <= min) {
+            min = distance[i];
+            lighterId = i;
+        }
+    }
+    
+    return lighterId;
 }
 
 void Graph::printGraph() {
     Node *node = this->getFirstNode();
     Edge *edge;
-    printf("\e[H\e[2J");
+    // printf("\e[H\e[2J");
     cout << "Lista de adjacência" << endl;
     while(node != nullptr) {
         edge = node->getFirstEdge();
@@ -289,3 +616,64 @@ void Graph::printGraphDot(ofstream& file) {
         cout << "Falha ao abrir o arquivo";
     }
 }
+
+int Graph::mappingVector(int *map, int id, int size) {
+    for(int i = 0; i < size; i++) {
+        if(map[i] == id)
+            return i;
+    }
+}
+
+
+Graph* Graph::auxAgmPrim(int *list) {
+    Graph *aux = subGraph(list);
+    aux->agmPrim();
+    return aux;
+}
+
+bool verifyList(int id, int* list) {
+    for(int i = 0; i < sizeof(list); i++) {
+        if(list[i] == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Graph* Graph::subGraph(int *list) {
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    bool *visit = new bool[this->getOrder()];
+    int *map = new int[this->getOrder()];
+
+    int i = 0;
+    while(node != nullptr) {
+        map[i] = node->getId();
+        visit[i] = false;
+        i++;
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+    while(node != nullptr) {
+        int nodeID = mappingVector(map, node->getId(), this->getOrder());
+        if(verifyList(node->getId(), list) && !visit[nodeID]) {
+            edge = node->getFirstEdge();
+            while(edge != nullptr) {
+                int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(verifyList(edge->getTargetId(), list) && !visit[edgeID]) {
+                    graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                    visit[edgeID] = true;
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+        visit[nodeID] = true;
+        node = node->getNextNode();
+    }
+    return graphAux;
+}
+
+
+
