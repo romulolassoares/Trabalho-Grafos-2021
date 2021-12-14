@@ -64,6 +64,9 @@ class Graph{
         void printGraph();
         void recursiveGetVertexInduced(int id, Graph *graph);
         int mappingVector(int *map, int id, int size);
+        int minumumDistance(bool *visit, float *distance);
+        Graph* auxAgmPrim(int *list);
+        Graph* subGraph(int *list);
 
 };
 

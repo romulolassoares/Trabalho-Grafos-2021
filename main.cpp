@@ -85,8 +85,8 @@ int menu() {
     cout << "[1] Subgrafo induzido por conjunto de vértices" << endl;
     cout << "[2] Caminho Mínimo entre dois vértices - Dijkstra" << endl;
     cout << "[3] Caminho Mínimo entre dois vértices - Floyd" << endl;
-    cout << "[4] Árvore Geradora Mínima de Prim" << endl;
-    cout << "[5] Árvore Geradora Mínima de Kruskal" << endl;
+    cout << "[4] Árvore Geradora Mínima de Kruskal" << endl;
+    cout << "[5] Árvore Geradora Mínima de Prim" << endl;
     cout << "[6] Imprimir caminhamento em largura" << endl;
     cout << "[7] Imprimir ordenacao topológica" << endl;
     cout << "[8] Algoritmo Guloso" << endl;
@@ -142,7 +142,19 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file) {
         }
             //AGM Prim;
         case 5:{
-            cout << "Funcionabilidade ainda não desenvolvida" << endl;
+            int max = graph->getOrder();
+            cout << "Número máximo de vertices (até " << graph->getOrder()-1 << "): " << endl;
+            cin >> max;
+            int *list = new int[max];
+            cout << "Informe a lista de vertices: " << endl;
+            for (int i = 0; i < max; i++)
+            {
+                cout << "Vértice " << i << ": " << endl;
+                cin >> list[i];
+            }
+            cout << 'start' << endl;
+            Graph *graphAux = graph->auxAgmPrim(list);
+            graphAux->printGraphDot(output_file);
             break;
         }
             //Busca em largura;
@@ -228,6 +240,9 @@ int main(int argc, char const *argv[]) {
     // graph->breadthFirstSearch(0);
     // cout << graph->dijkstra(1,4);
     //Fechando arquivo de entrada
+    // Graph *aux = graph->agmPrim();
+    // aux->printGraphDot(output_file);
+
     input_file.close();
 
     //Fechando arquivo de saída

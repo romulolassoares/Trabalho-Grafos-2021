@@ -443,8 +443,100 @@ Graph* Graph::getIndirectTransitive(int idNode) {
 Graph* agmKuskal() {
 
 }
-Graph* agmPrim() {
+Graph* Graph::agmPrim() {
+    bool *visit = new bool[this->getOrder()];
+    float *distance = new float[this->getOrder()];
+    int *path = new int[this->getOrder()];
+    float infinit = std::numeric_limits<float>::max();
+    float lighterWeight = infinit;
+    int *map = new int[this->getOrder()];
 
+    Node *node = this->getFirstNode();
+    Edge *edge, *lighterEdge;
+    int i = 0;
+    while(node != nullptr) {
+        map[i] = node->getId();
+        i++;
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            if(edge->getWeight() <= lighterWeight) {
+                lighterWeight = edge->getWeight();
+                lighterEdge = edge;
+            }
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+
+    int start = lighterEdge->getTargetId();
+
+    for(i = 0; i < this->order; i++) {
+        visit[i] = false;
+        distance[i] = infinit;
+        path[i] = -1;
+    }
+    distance[start] = 0;
+
+    for(i = 0; i < this->getOrder(); i++) {
+        int distMin = minumumDistance(visit, distance);
+        visit[distMin] = true;
+        Node *nodeAux = this->getNode(distMin);
+        if(nodeAux != nullptr) {
+            edge = nodeAux->getFirstEdge();
+            while(edge != nullptr) {
+                int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(!visit[edgeID] && edge->getWeight() < distance[edgeID]) {
+                    distance[edgeID] = edge->getWeight();
+                    path[edgeID] = distMin;
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+    }
+
+    Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    node = this->getFirstNode();
+
+    for(i = 0; i < this->getOrder(); i++) {
+        visit[i] = false;
+    }
+
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+            if(!visit[edgeID] && path[edgeID] != -1) {;
+                graph->insertEdge(path[edgeID], map[edgeID], edge->getWeight());
+                visit[edgeID] = true;
+            } 
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+
+    return graph;
+}
+
+int Graph::minumumDistance(bool *visit, float *distance) {
+    float min = std::numeric_limits<float>::max();
+    int lighterId;
+
+    for (int i = 0; i < this->getOrder(); i++)
+    {
+        if(visit[i] == false && distance[i] <= min) {
+            min = distance[i];
+            lighterId = i;
+        }
+    }
+    
+    return lighterId;
 }
 
 void Graph::printGraph() {
@@ -523,3 +615,57 @@ int Graph::mappingVector(int *map, int id, int size) {
             return i;
     }
 }
+
+
+Graph* Graph::auxAgmPrim(int *list) {
+    Graph *aux = subGraph(list);
+    aux->agmPrim();
+    return aux;
+}
+
+bool verifyList(int id, int* list) {
+    for(int i = 0; i < sizeof(list); i++) {
+        if(list[i] == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Graph* Graph::subGraph(int *list) {
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+
+    bool *visit = new bool[this->getOrder()];
+    int *map = new int[this->getOrder()];
+
+    int i = 0;
+    while(node != nullptr) {
+        map[i] = node->getId();
+        visit[i] = false;
+        i++;
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+    while(node != nullptr) {
+        int nodeID = mappingVector(map, node->getId(), this->getOrder());
+        if(verifyList(node->getId(), list) && !visit[nodeID]) {
+            edge = node->getFirstEdge();
+            while(edge != nullptr) {
+                int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+                if(verifyList(edge->getTargetId(), list) && !visit[edgeID]) {
+                    graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
+                    visit[edgeID] = true;
+                }
+                edge = edge->getNextEdge();
+            }
+        }
+        visit[nodeID] = true;
+        node = node->getNextNode();
+    }
+    return graphAux;
+}
+
+
+
