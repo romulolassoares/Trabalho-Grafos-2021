@@ -50,6 +50,7 @@ class Graph{
         Graph* getIndirectTransitive(int idNode);
         Graph* agmKuskal();
         Graph* agmPrim();
+        Graph* agmPrim2();
         float floydMarshall(int idSource, int idTarget);
         float dijkstra(int idSource, int idTarget);
         void recursiveDijkstra(int* distance, int* visit, int* previous, int* map, int current);
@@ -65,8 +66,9 @@ class Graph{
         void recursiveGetVertexInduced(int id, Graph *graph);
         int mappingVector(int *map, int id, int size);
         int minumumDistance(bool *visit, float *distance);
-        Graph* auxAgmPrim(int *list);
-        Graph* subGraph(int *list);
+        Graph* auxAgmPrim(int *list, int sizeList);
+        Graph* subGraph(int *list, int sizeList);
+        float** matrixAdj();
 
 };
 

@@ -13,10 +13,9 @@
 #include <iomanip>
 #include <limits>
 
+#include <bits/stdc++.h>
 
 using namespace std;
-
-int INF = -1;
 
 /**************************************************************************************************
  * Defining the Graph's methods
@@ -452,85 +451,61 @@ Graph* agmKuskal() {
  * @author Rômulo Luiz Araujo Souza Soares
  */
 Graph* Graph::agmPrim() {
-    bool *visit = new bool[this->getOrder()];
+
+    int *parent = new int[this->getOrder()];
     float *distance = new float[this->getOrder()];
-    int *path = new int[this->getOrder()];
-    float infinit = std::numeric_limits<float>::max();
-    float lighterWeight = infinit;
+    bool *visit = new bool[this->getOrder()];
     int *map = new int[this->getOrder()];
+    int inf = std::numeric_limits<float>::max();
+    float **matrix;
+    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
 
     Node *node = this->getFirstNode();
-    Edge *edge, *lighterEdge;
-    int i = 0;
-    while(node != nullptr) {
+    // cout << "Order: " << this->getOrder() << endl;
+    // cout << "for - start " << endl;
+    for (int i = 0; i < this->getOrder(); i++) {
+        // cout << "id: " << node << endl;
+        // cout << i << endl;
         map[i] = node->getId();
-        i++;
-        node = node->getNextNode();
-    }
-    node = this->getFirstNode();
-
-    while(node != nullptr) {
-        edge = node->getFirstEdge();
-        while(edge != nullptr) {
-            if(edge->getWeight() <= lighterWeight) {
-                lighterWeight = edge->getWeight();
-                lighterEdge = edge;
-            }
-            edge = edge->getNextEdge();
-        }
-        node = node->getNextNode();
-    }
-    node = this->getFirstNode();
-
-    int start = lighterEdge->getTargetId();
-
-    for(i = 0; i < this->order; i++) {
+        
+        // cout << map[i] << " ";
+        distance[i] = inf;
         visit[i] = false;
-        distance[i] = infinit;
-        path[i] = -1;
+        node = node->getNextNode();
     }
-    distance[start] = 0;
+    // cout << "- end" << endl;
+    cout << endl;
 
-    for(i = 0; i < this->getOrder(); i++) {
-        int distMin = minumumDistance(visit, distance);
-        visit[distMin] = true;
-        Node *nodeAux = this->getNode(distMin);
-        if(nodeAux != nullptr) {
-            edge = nodeAux->getFirstEdge();
-            while(edge != nullptr) {
-                int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
-                if(!visit[edgeID] && edge->getWeight() < distance[edgeID]) {
-                    distance[edgeID] = edge->getWeight();
-                    path[edgeID] = distMin;
-                }
-                edge = edge->getNextEdge();
+    distance[0] = 0;
+    parent[0] = -1;
+    node = this->getFirstNode();
+
+    // cout << "matrix - start ";
+    matrix = this->matrixAdj();
+    // cout << "- end" << endl;
+
+    for(int i = 0; i < this->getOrder(); i++) {
+        int vertex = minumumDistance(visit, distance);
+        visit[vertex] = true;
+
+        for (int j = 0; j < this->getOrder(); j++) {
+            if((matrix[vertex][j]) && (visit[j] == false) && matrix[vertex][j] < (distance[j])) {
+                parent[j] = vertex;
+                distance[j] = matrix[vertex][j];
             }
         }
     }
 
-    Graph *graph = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
-
-    node = this->getFirstNode();
-
-    for(i = 0; i < this->getOrder(); i++) {
-        visit[i] = false;
-    }
-
-    while(node != nullptr) {
-        edge = node->getFirstEdge();
-        while(edge != nullptr) {
-            int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
-            if(!visit[edgeID] && path[edgeID] != -1) {;
-                graph->insertEdge(path[edgeID], map[edgeID], edge->getWeight());
-                visit[edgeID] = true;
-            } 
-            edge = edge->getNextEdge();
+    for(int i = 0; i < this->getOrder(); i++) {
+        if(!(parent[i] == -1)) {
+            graphAux->insertEdge(parent[i], i, matrix[i][parent[i]]);
         }
-        node = node->getNextNode();
     }
 
-    return graph;
+    return graphAux;
 }
+
+
 
 int Graph::minumumDistance(bool *visit, float *distance) {
     float min = std::numeric_limits<float>::max();
@@ -625,26 +600,36 @@ int Graph::mappingVector(int *map, int id, int size) {
 }
 
 
-Graph* Graph::auxAgmPrim(int *list) {
-    Graph *aux = subGraph(list);
+Graph* Graph::auxAgmPrim(int *list, int sizeList) {
+    Graph *aux = subGraph(list, sizeList);
+    // cout << "print" << endl;
+    // aux->printGraph();
+    // cout << "prim" << endl;
     aux->agmPrim();
-    return aux;
+    // cout << "print" << endl;
+    // aux->printGraph();
+    return aux->agmPrim();
 }
 
-bool verifyList(int id, int* list) {
-    for(int i = 0; i < sizeof(list); i++) {
+bool verifyList(int id, int* list, int size) {
+    // cout << sizeof(list) << endl;
+    for(int i = 0; i < size; i++) {
         if(list[i] == id) {
+            // cout << list[i] << " - true" << endl;
             return true;
         }
     }
+    // cout << id << " - false" << endl;
     return false;
 }
 
-Graph* Graph::subGraph(int *list) {
+Graph* Graph::subGraph(int *list, int sizeList) {
     Node *node = this->getFirstNode();
     Edge *edge;
-    Graph *graphAux = new Graph(this->getOrder(), this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
-
+    // int sizeList = (sizeof(list)/sizeof(list[0]))+1;
+    // cout << "sizeList: " << sizeList << endl;
+    Graph *graphAux = new Graph(sizeList, this->getDirected(), this->getWeightedEdge(), this->getWeightedNode());
+    // cout << "graphAux: " << graphAux->getOrder() << endl;
     bool *visit = new bool[this->getOrder()];
     int *map = new int[this->getOrder()];
 
@@ -657,12 +642,15 @@ Graph* Graph::subGraph(int *list) {
     }
     node = this->getFirstNode();
     while(node != nullptr) {
+        
         int nodeID = mappingVector(map, node->getId(), this->getOrder());
-        if(verifyList(node->getId(), list) && !visit[nodeID]) {
+        // cout << node->getId() << " - " << visit[nodeID] << endl;
+        if(verifyList(node->getId(), list, sizeList) && !visit[nodeID]) {
             edge = node->getFirstEdge();
             while(edge != nullptr) {
                 int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
-                if(verifyList(edge->getTargetId(), list) && !visit[edgeID]) {
+                if(verifyList(edge->getTargetId(), list, sizeList) /*&& !visit[edgeID]*/) {
+                    // cout << "edge: " << node->getId() << " -- " << edge->getTargetId() << endl;
                     graphAux->insertEdge(node->getId(), edge->getTargetId(), edge->getWeight());
                     visit[edgeID] = true;
                 }
@@ -672,8 +660,71 @@ Graph* Graph::subGraph(int *list) {
         visit[nodeID] = true;
         node = node->getNextNode();
     }
+    // graphAux->printGraph();
     return graphAux;
 }
 
 
 
+/**
+ * Função auxiliar para montar a matrix de adjacência do grafo
+ *
+ * @return matrix de adjacência
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
+float** Graph::matrixAdj() {
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    int nodeID, edgeID;
+    int *map = new int[this->getOrder()];
+    float** matrix = (float **) calloc(this->getOrder()-1, sizeof(float *));
+    for(int i = 0; i < this->getOrder(); i++) {
+        matrix[i] = (float *) calloc (this->getOrder()-1, sizeof(float));
+    }
+
+    for (int i = 0; i < this->getOrder(); i++) {
+        for(int j = 0; j < this->getOrder(); j++) {
+            matrix[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < this->getOrder(); i++) {
+        map[i] = node->getId();
+        node = node->getNextNode();
+    }
+    node = this->getFirstNode();
+
+    // Ordena o map
+    for (int i = 0; i < this->getOrder(); i++) {
+        for(int j = 0; j < this->getOrder(); j++) {
+            if(map[j] > map[i]) {
+                int aux = map[i];
+                map[i] = map[j];
+                map[j] = aux;
+            }
+        }
+    }
+
+    while(node != nullptr) {
+        nodeID = mappingVector(map, node->getId(), this->getOrder());
+        edge = node->getFirstEdge();
+        while(edge != nullptr) {
+            edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+            if(this->getWeightedEdge()) {
+                matrix[nodeID][edgeID] = edge->getWeight();
+                if(!this->getDirected()) {
+                    matrix[edgeID][nodeID] = edge->getWeight();
+                }
+            } else {
+                matrix[nodeID][edgeID] = 1;
+                if(!this->getDirected()) {
+                    matrix[edgeID][nodeID] = 1;
+                }
+            }
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+    return matrix;
+}

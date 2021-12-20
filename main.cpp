@@ -143,17 +143,19 @@ void selecionar(int selecao, Graph* graph, ofstream& output_file) {
             //AGM Prim;
         case 5:{
             int max = graph->getOrder();
-            cout << "Número máximo de vertices (até " << graph->getOrder()-1 << "): " << endl;
+            cout << "Número máximo de vertices (até " << graph->getOrder() << "): " << endl;
             cin >> max;
             int *list = new int[max];
             cout << "Informe a lista de vertices: " << endl;
-            for (int i = 0; i < max; i++)
-            {
+            for (int i = 0; i < max; i++) {
                 cout << "Vértice " << i << ": " << endl;
                 cin >> list[i];
+                // list[i] = i;
             }
-            cout << 'start' << endl;
-            Graph *graphAux = graph->auxAgmPrim(list);
+            // for (int i = 0; i < max; i++) {
+            //     cout << list[i] << " ";
+            // }
+            Graph *graphAux = graph->auxAgmPrim(list, max);
             graphAux->printGraphDot(output_file);
             break;
         }
@@ -242,6 +244,7 @@ int main(int argc, char const *argv[]) {
     //Fechando arquivo de entrada
     // Graph *aux = graph->agmPrim();
     // aux->printGraphDot(output_file);
+    // graph->agmPrim();
 
     input_file.close();
 
