@@ -189,7 +189,14 @@ Node *Graph::getNode(int id) {
     }    
 }
 
-
+/**
+ * Distância entre dois vértices usando algoritmo de Floyd
+ *
+ * @param idSource id do vértice inicial.
+ * @param idTarget id do vértice final.
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
 float Graph::floydMarshall(int idSource, int idTarget) {
     Node *node = this->getFirstNode();
     Edge *edge;
