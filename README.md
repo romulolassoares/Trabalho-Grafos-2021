@@ -16,7 +16,7 @@ Todas as atividades de implementação cobradas ao longo do curso da disciplina 
 - [x] Subgrafo vértice-induzido pelo fecho transitivo direto.
 - [x] Subgrafo vértice-induzido pelo fecho transitivo indireto.
 - [x] Caminho mínimo entre dois vertices - Djkstra
-- [ ] Caminho mínimo entre dois vertices - Floyd
+- [x] Caminho mínimo entre dois vertices - Floyd
 - [x] Árvore geradora mínima - Prim
 - [ ] Árvore Geradora Mínima - Kruskal
 - [x] Caminhamento em largura

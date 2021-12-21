@@ -191,7 +191,63 @@ Node *Graph::getNode(int id) {
 
 
 float Graph::floydMarshall(int idSource, int idTarget) {
-    
+    Node *node = this->getFirstNode();
+    Edge *edge;
+    int *map = new int[this->getOrder()];
+    float distance[this->getOrder()][this->getOrder()];
+    int i = 0;
+    while(node != nullptr) {
+        map[i] = node->getId();
+        node = node->getNextNode();
+        i++;
+    }
+
+    // Ordena o map
+    for (int i = 0; i < this->getOrder(); i++) {
+        for(int j = 0; j < this->getOrder(); j++) {
+            if(map[j] > map[i]) {
+                int aux = map[i];
+                map[i] = map[j];
+                map[j] = aux;
+            }
+        }
+    }
+
+    node = this->getFirstNode();
+    for(int i = 0; i < this->getOrder(); i++) {
+        for(int j = 0; j < this->getOrder(); j++) {
+            if(i == j) {
+                distance[i][j] = 0;
+            } else {
+                distance[i][j] = numeric_limits<float>::infinity();
+            }
+        }
+    }
+
+    float **distance2 = this->matrixAdj();
+
+    while(node != nullptr) {
+        edge = node->getFirstEdge();
+        int nodeID = mappingVector(map, node->getId(), this->getOrder());
+        while(edge != nullptr) {
+            int edgeID = mappingVector(map, edge->getTargetId(), this->getOrder());
+            distance[nodeID][edgeID] = edge->getWeight();
+            edge = edge->getNextEdge();
+        }
+        node = node->getNextNode();
+    }
+
+    for(int k = 0; k < this->getOrder(); k++) {
+        for(int i = 0; i < this->getOrder(); i++) {
+            for(int j = 0; j < this->getOrder(); j++) {
+                if(distance[i][j] > distance[i][k] + distance[k][j]) {
+                    distance[i][j] = distance[i][k] + distance[k][j];
+                }
+            }
+        }
+    }
+
+    return distance[idSource][idTarget];
 }
 
    
@@ -439,9 +495,10 @@ Graph* Graph::getIndirectTransitive(int idNode) {
     return graph;
 }
 
-Graph* agmKuskal() {
-
+Graph* Graph::agmKuskal() {
 }
+
+
 
 /**
  * Algoritmo de Prim
@@ -728,3 +785,4 @@ float** Graph::matrixAdj() {
     }
     return matrix;
 }
+
