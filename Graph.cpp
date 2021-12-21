@@ -257,7 +257,14 @@ float Graph::floydMarshall(int idSource, int idTarget) {
     return distance[idSource][idTarget];
 }
 
-   
+/**
+ * Distância entre dois vértices usando algoritmo de Dijkstra
+ *
+ * @param idSource id do vértice inicial.
+ * @param idTarget id do vértice final.
+ * 
+ * @author Rômulo Luiz Araujo Souza Soares
+ */
 float Graph::dijkstra(int idSource, int idTarget) {
 	int *distance = new int[this->order];
 	int *map = new int[this->order];
